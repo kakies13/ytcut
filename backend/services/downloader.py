@@ -3,6 +3,14 @@ import os
 import uuid
 from core.config import settings
 
+class MyLogger:
+    def debug(self, msg):
+        print(f"[YT-DLP] {msg}")
+    def warning(self, msg):
+        print(f"[YT-DLP WARNING] {msg}")
+    def error(self, msg):
+        print(f"[YT-DLP ERROR] {msg}")
+
 class DownloadService:
     def __init__(self):
         self.download_dir = settings.DOWNLOAD_DIR
@@ -17,17 +25,24 @@ class DownloadService:
         # Anti-bot measures
         cookies_content = os.environ.get("YOUTUBE_COOKIES")
         cookie_file = "cookies.txt"
+        
+        print(f"DEBUG: Checking for cookies... Env var present: {bool(cookies_content)}")
         if cookies_content:
+             print(f"DEBUG: Cookies length: {len(cookies_content)}")
              # Create cookies.txt from env var if it doesn't exist or is empty
-            with open(cookie_file, "w") as f:
+             with open(cookie_file, "w") as f:
                 f.write(cookies_content)
+             print(f"DEBUG: Written to {cookie_file}")
+        else:
+             print("DEBUG: No cookies found in env var.")
         
         ydl_opts = {
             'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]',
             'outtmpl': output_template,
             'merge_output_format': 'mp4',
             'noplaylist': True,
-            'quiet': True,
+            'verbose': True, # Enable verbose logging
+            'logger': MyLogger(), # Redirect logs to stdout
             # Spoof User-Agent to look like a real browser
             'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'http_headers': {
