@@ -40,12 +40,11 @@ class VideoRequest(BaseModel):
 
 @app.post("/api/process")
 def process_video(request: VideoRequest):
-    # 1. Download
-    print(f"Downloading: {request.url}")
-    video_data = downloader.download_video(request.url)
-    video_path = video_data["path"]
-    
     try:
+        # 1. Download
+        print(f"Downloading: {request.url}")
+        video_data = downloader.download_video(request.url)
+        video_path = video_data["path"]
         # 2. Transcribe
         print("Transcribing...")
         transcription_result = transcriber.transcribe_video(video_path)
