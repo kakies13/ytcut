@@ -2,8 +2,8 @@ fastapi
 uvicorn
 python-multipart
 yt-dlp
-moviepy<2.0
-openai-whisper
+moviepy
 google-generativeai
 python-dotenv
 opencv-python-headless
+faster-whisper

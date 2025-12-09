@@ -6,9 +6,7 @@ services:
     region: frankfurt
     plan: free
     rootDir: backend
-    buildCommand: |
-      pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-      pip install -r requirements.txt
+    buildCommand: "pip install -r requirements.txt"
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: GEMINI_API_KEY
