@@ -19,13 +19,16 @@ class TranscriberService:
 
         # Lazy load model just before use
         if self.model is None:
+            # Preemptive GC to clear memory from download/other tasks
+            gc.collect() 
             print(f"Loading Faster-Whisper model '{self.model_size}' on {self.device} ({self.compute_type})...")
             self.model = WhisperModel(self.model_size, device=self.device, compute_type=self.compute_type)
 
         try:
-            print("Starting transcription...")
+            print("Starting transcription (Greedy Search for Low RAM)...")
             # faster-whisper returns a generator
-            segments, info = self.model.transcribe(video_path, beam_size=5)
+            # beam_size=1 reduces memory usage significantly
+            segments, info = self.model.transcribe(video_path, beam_size=1)
             
             # Consume generator to get all segments
             result = list(segments)
