@@ -1,0 +1,41 @@
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node.js / Frontend
+node_modules/
+.next/
+out/
+build/
+dist/
+.DS_Store
+*.log
+.npm/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Media Files (Don't push large videos or generated clips)
+*.mp4
+*.mov
+*.avi
+*.mkv
+backend/downloads/*
+!backend/downloads/.gitkeep
+
+# IDEs
+.vscode/
+.idea/

@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+yt-dlp
+moviepy<2.0
+openai-whisper
+google-generativeai
+python-dotenv
+opencv-python
+torch
