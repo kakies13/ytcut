@@ -5,13 +5,7 @@ from core.config import settings
 
 app = FastAPI(title="YTcut API", version="1.0.0")
 
-# --- FIX: ADD FFmpeg TO PATH PROGRAMMATICALLY ---
-ffmpeg_path = r"C:\Users\Ay\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.0.1-full_build\bin"
-if os.path.exists(ffmpeg_path):
-    os.environ["PATH"] += os.pathsep + ffmpeg_path
-    print(f"Added FFmpeg to PATH: {ffmpeg_path}")
-else:
-    print(f"WARNING: FFmpeg path not found at: {ffmpeg_path}")
+# FFmpeg is handled by the environment (imageio-ffmpeg or system install)
 # ------------------------------------------------
 
 
