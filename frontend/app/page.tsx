@@ -5,6 +5,11 @@ import axios from 'axios';
 import { Scissors, FileVideo, Download, Loader2, Sparkles, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const getApiUrl = () => {
+  const url = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+  return url.startsWith('http') ? url : `https://${url}`;
+};
+
 export default function Home() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,8 +27,7 @@ export default function Home() {
     try {
       // In a real app, we'd use WebSocket or SSE for real-time status updates
       // Here we just wait for the long request
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
-      const response = await axios.post(`${API_URL}/api/process`, { url });
+      const response = await axios.post(`${getApiUrl()}/api/process`, { url });
 
       if (response.data.status === 'error') {
         setError(response.data.message || 'Bir hata oluştu.');
@@ -129,7 +133,7 @@ export default function Home() {
                     {/* Real Video Preview */}
                     <div className="aspect-[9/16] bg-black flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
                       <video
-                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/downloads/${clip.file_path}`}
+                        src={`${getApiUrl()}/downloads/${clip.file_path}`}
                         className="w-full h-full object-cover"
                         controls
                         preload="metadata"
@@ -144,7 +148,7 @@ export default function Home() {
                       <p className="text-xs text-neutral-400 line-clamp-2">{clip.reason}</p>
 
                       <a
-                        href={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/downloads/${clip.file_path}`}
+                        href={`${getApiUrl()}/downloads/${clip.file_path}`}
                         download
                         target="_blank"
                         rel="noopener noreferrer"
