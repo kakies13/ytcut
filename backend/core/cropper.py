@@ -9,19 +9,24 @@ class VideoCropper:
         # Use OpenCV's built-in Haar Cascade for face detection (lighter than MediaPipe)
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-    def detect_face_x_center(self, frame) -> float:
+    def detect_face_x_center(self, frame) -> float | None:
         """
         Returns the normalized x-center (0.0 to 1.0) of the primary face in the frame.
-        Returns 0.5 (center) if no face is found.
+        Returns None if no face is found.
         """
         if frame is None:
-            return 0.5
+            return None
             
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
+        # MoviePy returns RGB, OpenCV usually expects BGR/Gray
+        # Correctly convert RGB to GRAY
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        
+        # Detect faces
+        # minNeighbors=3 is slightly more lenient than 4
+        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30))
         
         if len(faces) == 0:
-            return 0.5
+            return None
 
         # Assume the largest face is the speaker
         largest_face = max(faces, key=lambda f: f[2] * f[3])
@@ -43,10 +48,30 @@ class VideoCropper:
         if target_w % 2 != 0:
             target_w -= 1
         
-        # Analyze first few seconds to find the speaker's position (simplification for speed)
-        # In a full production app, we would track the face frame-by-frame
-        sample_frame = clip.get_frame(1) # Get frame at 1st second
-        center_x_rel = self.detect_face_x_center(sample_frame)
+        # Analyze multiple frames to find the speaker's position
+        # We sample 5 frames distributed across the clip
+        duration = clip.duration
+        sample_counts = 5
+        timestamps = [i * duration / sample_counts for i in range(sample_counts)]
+        
+        centers = []
+        for t in timestamps:
+            # Ensure we don't go past the end
+            t = min(t, duration - 0.1)
+            try:
+                frame = clip.get_frame(t)
+                c = self.detect_face_x_center(frame)
+                if c is not None:
+                    centers.append(c)
+            except Exception as e:
+                print(f"Error analyzing frame at {t}: {e}")
+                pass
+        
+        # If we found faces, take the average position
+        if centers:
+            center_x_rel = sum(centers) / len(centers)
+        else:
+            center_x_rel = 0.5
         
         # Calculate crop coordinates
         center_x_px = int(center_x_rel * w)

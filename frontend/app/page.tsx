@@ -22,7 +22,8 @@ export default function Home() {
     try {
       // In a real app, we'd use WebSocket or SSE for real-time status updates
       // Here we just wait for the long request
-      const response = await axios.post('http://127.0.0.1:8000/api/process', { url });
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      const response = await axios.post(`${API_URL}/api/process`, { url });
 
       if (response.data.status === 'error') {
         setError(response.data.message || 'Bir hata oluştu.');
@@ -128,7 +129,7 @@ export default function Home() {
                     {/* Real Video Preview */}
                     <div className="aspect-[9/16] bg-black flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500">
                       <video
-                        src={`http://127.0.0.1:8000/downloads/${clip.file_path}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/downloads/${clip.file_path}`}
                         className="w-full h-full object-cover"
                         controls
                         preload="metadata"
@@ -143,7 +144,7 @@ export default function Home() {
                       <p className="text-xs text-neutral-400 line-clamp-2">{clip.reason}</p>
 
                       <a
-                        href={`http://127.0.0.1:8000/downloads/${clip.file_path}`}
+                        href={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}/downloads/${clip.file_path}`}
                         download
                         target="_blank"
                         rel="noopener noreferrer"
