@@ -6,5 +6,4 @@ moviepy<2.0
 openai-whisper
 google-generativeai
 python-dotenv
-opencv-python
-torch
+opencv-python-headless
