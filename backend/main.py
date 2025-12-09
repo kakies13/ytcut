@@ -31,7 +31,7 @@ from core.cropper import VideoCropper
 
 # Initialize Services
 downloader = DownloadService()
-transcriber = TranscriberService(model_size="base") # Use 'tiny' or 'base' for speed on CPU
+transcriber = TranscriberService(model_size="tiny") # Use 'tiny' for Render Free Tier (Low RAM)
 analyzer = ContentAnalyzer()
 cropper = VideoCropper()
 
