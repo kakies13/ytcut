@@ -25,7 +25,4 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: ytcut-backend
-          property: host
+        value: https://ytcut-backend.onrender.com
